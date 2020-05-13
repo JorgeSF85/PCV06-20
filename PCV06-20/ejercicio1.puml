@@ -1,0 +1,32 @@
+@startuml
+
+actor Cliente 
+
+Cliente ++
+Cliente -> Pago: 1: solicitarPago
+Pago -> Pedido: 1.1: consultaPedidosPendientes
+Pedido -> Pedido: 1.1.1: buscarPedidosPendientes
+
+loop 
+    Cliente <- Pedido: 1.1.2: muestraPedidosPagoPendientes
+    
+end
+
+Cliente -> Pedido: 2: seleccionarPedidoAPagar
+Cliente -> Pedido: 3: confirmarPedido
+Cliente <- Pago: 3.1: solicitarFormaPago
+deactivate Pedido
+deactivate Pago
+Cliente -> Pago: 4: seleccionarFormaPago
+
+alt formaPago == efectivo
+    Cliente -> Pago : 4.1: realizaPago
+    Cliente <- Pago : 4.1.1: confirmaPago
+    
+else formaPago == tarjeta
+    Cliente -> Pago : 4.1: introducirDatos
+    Banco -> Banco : 4.2: comprobarDatos
+    Cliente -> Pago : 4.3: realizaPago
+     
+end
+@enduml
